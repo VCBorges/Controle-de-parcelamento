@@ -1,0 +1,3 @@
+mkdir projeto_samarinha
+django-admin startproject samarinha
+python manage.py startapp controle_parcelamento

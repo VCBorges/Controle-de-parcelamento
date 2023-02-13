@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% load humanize %} 
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <a href="{% url 'cliente_list' %}">
+        <button type="submit" class="btn btn-primary">Lista de Clientes</button>
+    </a>
+
+    <a href="{% url 'vendas_list' %}">
+        <button type="submit" class="btn btn-primary">Lista de Vendas</button>
+    </a>
+
+    <a href="{% url 'parcelas_list' %}">
+        <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
+    </a>
+    <div class="col-lg-11">
+        <!-- <h1 parcelas</h1> -->
+
+        <table id="parcelas_table" class="display">
+
+            <thead>
+                <tr>
+                    <th>Número Pedido</th>
+                    <th>Nome Cliente</th>
+                    <th>Parcela</th>
+                    <th>Data Vencimento</th>
+                    <th>Status</th>
+                    <th>Valor</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for parcela in parcelas %}
+                    <tr>
+                        <td>{{ parcela.num_pedido }}</td>
+                        <td>{{ parcela.nome_cliente }}</td>
+                        <td>{{ parcela.parcela }}</td>
+                        <td>{{ parcela.data_vencimento|date:"d/m/Y" }}</td>
+                        <td>{{ parcela.status }}</td>
+                        <td>{{ parcela.valor|floatformat:2 }}</td>
+                        <td><a href="{% url 'update_parcela' parcela.id %}">Editar</a></td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready( function () {
+    $('#parcelas_table').DataTable({
+        // ordering: true,
+    });
+    
+} );
+</script>
+{% endblock %}
