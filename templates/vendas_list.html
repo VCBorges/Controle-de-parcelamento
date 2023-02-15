@@ -6,17 +6,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <a href="{% url 'cliente_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Clientes</button>
-    </a>
-
-    <a href="{% url 'vendas_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Vendas</button>
-    </a>
-
-    <a href="{% url 'parcelas_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
-    </a>
+    
     <div class="col-lg-12">
         <!-- <h1 vendas</h1> -->
 
@@ -48,7 +38,7 @@
                         <td>{{ venda.valor_parcelado }}</td>
                         <td>{{ venda.qnt_parcelas }}</td>
                         <td>{{ venda.status }}</td>
-                        <td><a href="{% url 'update_venda' venda.num_pedido %}">Editar</a></td>
+                        <td><a href="{% url 'update_venda' venda.id %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
                     </tr>
                 {% endfor %}
 
@@ -62,6 +52,7 @@
     $(document).ready( function () {
     $('#vendas_table').DataTable({
         // ordering: true,
+        
     });
     
 } );

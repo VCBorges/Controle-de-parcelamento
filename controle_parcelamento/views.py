@@ -72,12 +72,12 @@ class CreateVendasView(CreateView):
     success_url = reverse_lazy('home')
     
     def form_valid(self, form):
-        print(form)
+        # print(form)
         messages.success(self.request, 'Venda cadastrado com sucesso!', extra_tags='venda')
         return super().form_valid(form)
     
     def form_invalid(self, form: CreateVendasForm):
-        print(form)
+        # print(form)
         print('EXECUTANDO FORM INVALID')
         messages.error(self.request, 'Houve um erro ao cadastrar a venda!', extra_tags='venda')
         return redirect('home')

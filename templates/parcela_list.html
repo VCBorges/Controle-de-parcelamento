@@ -6,17 +6,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <a href="{% url 'cliente_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Clientes</button>
-    </a>
-
-    <a href="{% url 'vendas_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Vendas</button>
-    </a>
-
-    <a href="{% url 'parcelas_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
-    </a>
+   
     <div class="col-lg-11">
         <!-- <h1 parcelas</h1> -->
 
@@ -44,7 +34,7 @@
                         <td>{{ parcela.data_vencimento|date:"d/m/Y" }}</td>
                         <td>{{ parcela.status }}</td>
                         <td>{{ parcela.valor|floatformat:2 }}</td>
-                        <td><a href="{% url 'update_parcela' parcela.id %}">Editar</a></td>
+                        <td><a href="{% url 'update_parcela' parcela.id %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
                     </tr>
                 {% endfor %}
 
@@ -55,11 +45,42 @@
 
 
 <script>
-    $(document).ready( function () {
-    $('#parcelas_table').DataTable({
-        // ordering: true,
-    });
+   $(document).ready(function() {
+    var dt = $('#parcelas_table').DataTable({
+    //     searchPanes:{
+    //         // cascadePanes: true,
+    //         collapse: true,
+    //         viewTotal: true,
+    //         columns: [4]
+    //     },
     
-} );
+    // dom: 'Pfrtip',
+
+
+    initComplete: function () {
+      this.api().columns(4).every( function () {
+        var column = this;
+        var select = $('<select><option value=""></option></select>')
+          .appendTo( $(column.header()) )
+          .on( 'change', function () {
+            var val = $.fn.dataTable.util.escapeRegex(
+              $(this).val()
+            );
+ 
+            column
+              .search( val ? '^'+val+'$' : '', true, false )
+              .draw();
+          } );
+ 
+        column.data().unique().sort().each( function ( d, j ) {
+          select.append( '<option value="'+d+'">'+d+'</option>' )
+        } );
+      } );
+    }
+
+    });
+});
+    
+
 </script>
 {% endblock %}

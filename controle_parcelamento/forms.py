@@ -21,6 +21,7 @@ class CreateVendasForm(ModelForm):
     
     data_pedido = forms.DateField(label="Data do Pedido",widget=forms.TextInput(attrs={'type': 'date','required': True}))
     
+    
     # def __init__(self, *args, **kwargs):
     #     super(CreateVendasForm, self).__init__(*args, **kwargs)
 
@@ -29,10 +30,19 @@ class CreateVendasForm(ModelForm):
     #         Field('data_pedido', attrs={'type': 'date'}),
     #     )
     
+    # def clean_valor_parcelado(self):
+    #     cleaned_data = super().clean()
+    #     valor_pedido = cleaned_data.get("valor_pedido")
+    #     valor_entrada = cleaned_data.get("valor_entrada")
+    #     valor_parcelado = valor_pedido - valor_entrada
+    #     return valor_parcelado
+    
     def save(self, commit=True):
-        instance = super().save()
+        instance = super().save(commit=False)
         
-        lista_parcelas = []
+        # instance['valor_parcelado'] = instance['valor_pedido'] - instance['valor_entrada']
+        instance.valor_parcelado = instance.valor_pedido - instance.valor_entrada
+        instance.save()
         
         venda = Vendas.objects.get(num_pedido=instance.num_pedido)
         
@@ -40,20 +50,28 @@ class CreateVendasForm(ModelForm):
         
         # cliente = Cliente.objects.get(documento=venda.documento)
         
+        # lista_parcelas = []
         
-        for i in range(instance.qnt_parcelas):
+        # for i in range(instance.qnt_parcelas):
             
-            parcela = Parcelas(num_pedido=venda,
-                               parcela=i + 1,
-                               nome_cliente=venda.documento,
-                               valor=instance.valor_parcelado/instance.qnt_parcelas,
-                               status='Em Aberto')
+        #     parcela = Parcelas(num_pedido=venda,
+        #                        parcela=i + 1,
+        #                        nome_cliente=venda.documento,
+        #                        valor=instance.valor_parcelado/instance.qnt_parcelas,
+        #                        status='Em Aberto')
             
-            lista_parcelas.append(parcela)
+        #     lista_parcelas.append(parcela)
+            
+        lista_parcelas = [Parcelas(num_pedido=venda,
+                                   parcela=i + 1,
+                                   nome_cliente=venda.documento,
+                                   valor=instance.valor_parcelado/instance.qnt_parcelas,
+                                   status='Em Aberto') for i in range(instance.qnt_parcelas)]
+            
         Parcelas.objects.bulk_create(lista_parcelas)
         
         # if commit:
-            # instance.save()
+        # instance.save()
         return instance
 
     class Meta:
@@ -63,7 +81,7 @@ class CreateVendasForm(ModelForm):
                   'data_pedido',
                   'valor_pedido', 
                   'valor_entrada', 
-                  'valor_parcelado', 
+                #   'valor_parcelado', 
                   'qnt_parcelas',
                   'status'
                 ]
@@ -73,7 +91,11 @@ class UpdateClienteForm(ModelForm):
     
     class Meta:
         model = Cliente
-        fields = '__all__'
+        fields = [
+            'nivel_risco',
+            'modelo_negocio',
+            'data_analise',            
+        ]
         
 
 class UpdateVendasForm(ModelForm):
@@ -85,8 +107,12 @@ class UpdateVendasForm(ModelForm):
         
 class UpdateParcelasForm(ModelForm):
     
-    data_vencimento = forms.DateField(label="Data do Pedido",widget=forms.TextInput(attrs={'type': 'date'}))
+    data_vencimento = forms.DateField(label="Data de Vencimento",widget=forms.TextInput(attrs={'type': 'date'}))
         
     class Meta:
         model = Parcelas
-        fields = '__all__'
+        fields = [
+            'data_vencimento',
+            'valor',
+            'status'
+        ]

@@ -29,17 +29,7 @@
 
     <div class="container-fluid">
 
-        <a href="{% url 'cliente_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Clientes</button>
-        </a>
-
-        <a href="{% url 'vendas_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Vendas</button>
-        </a>
-
-        <a href="{% url 'parcelas_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
-        </a>
+        
         
         <div class="row">
 
@@ -62,7 +52,7 @@
                     {% endfor %}
                 {% endif %}
 
-                <form action="{% url 'update_venda' vendas.num_pedido %}" method="POST">
+                <form action="{% url 'update_venda' vendas.id %}" method="POST">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <button type="submit" class="btn btn-primary">Atualizar Venda</button>

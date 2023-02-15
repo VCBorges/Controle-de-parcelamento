@@ -13,33 +13,12 @@
         color: red;
     }
 
-    .btn-primary {
-        background-color: #b7b2a9;
-        border-color: #6e756f;
-    }
-
-    .btn-primary:hover {
-        background-color: #6e756f;
-        border-color: #b7b2a9;
-    }
 </style>
 {% endblock %}
 
 {% block content %}
 
     <div class="container-fluid">
-
-        <a href="{% url 'cliente_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Clientes</button>
-        </a>
-
-        <a href="{% url 'vendas_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Vendas</button>
-        </a>
-
-        <a href="{% url 'parcelas_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
-        </a>
         
         <div class="row">
 

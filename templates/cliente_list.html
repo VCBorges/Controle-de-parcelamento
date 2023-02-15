@@ -5,17 +5,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <a href="{% url 'cliente_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Clientes</button>
-    </a>
-
-    <a href="{% url 'vendas_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Vendas</button>
-    </a>
-
-    <a href="{% url 'parcelas_list' %}">
-        <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
-    </a>
+    
     <div class="col-lg-7">
         <h1>Clientes</h1>
 
@@ -26,7 +16,7 @@
                     <th>Nome</th>
                     <th>Documento</th>
                     <th>Nível de Risco</th>
-                    <th>Data Analise</th>
+                    <th>Data da Análise</th>
                     <th>Editar</th>
                 </tr>
             </thead>
@@ -39,7 +29,7 @@
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nivel_risco }}</td>
                         <td>{{ cliente.data_analise|date:"d/m/Y" }}</td>
-                        <td><a href="{% url 'update_cliente' cliente.documento %}">Editar</a></td>
+                        <td><a href="{% url 'update_cliente' cliente.documento %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
                     </tr>
                 {% endfor %}
 
@@ -53,6 +43,7 @@
     $(document).ready( function () {
     $('#clientes_table').DataTable({
         // ordering: true,
+        
     });
     
 } );

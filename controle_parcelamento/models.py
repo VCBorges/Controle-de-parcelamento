@@ -2,14 +2,14 @@ from django.db import models
 
 # Create your models here.
 NIVEL_RISCO_CHOICES = (
-    ('Baixissimo','Baixissimo'),
-    ('Medio','Medio'),
+    ('Baixíssimo','Baixissimo'),
+    ('Médio','Medio'),
     ('Alto','Alto'),
-    ('Altissimo','Altissimo'),
+    ('Altíssimo','Altissimo'),
 )
 
 MODELO_NEGOCIO_CHOICES = (
-    ('Sol Copérnico','Sol Copernico'),
+    ('Sol Copérnico','Sol Copérnico'),
     ('Sol+','Sol+'),
 )
 
@@ -23,6 +23,10 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        db_table = 'Cliente'
+    
 
 VENDAS_STATUS_CHOICES = (
     ('Entregue','Entregue'),
@@ -32,17 +36,21 @@ VENDAS_STATUS_CHOICES = (
 )
 
 class Vendas(models.Model):
-    num_pedido = models.CharField('Número do Pedido', primary_key=True, max_length=10, null=False, blank=False)
-    documento = models.ForeignKey(Cliente,verbose_name='CPF/CNPJ', on_delete=models.CASCADE, null=False, blank=False)
+    id = models.AutoField(primary_key=True)
+    num_pedido = models.CharField('Número do Pedido',max_length=10, null=False, blank=False, unique=True, default=None)
+    documento = models.ForeignKey(Cliente,verbose_name='Nome Cliente', on_delete=models.CASCADE, null=False, blank=False)
     data_pedido = models.DateField('Data do Pedido', null=False, blank=False)
     valor_pedido = models.DecimalField('Valor do Pedido', max_digits=10, decimal_places=2, null=False, blank=False)
     valor_entrada = models.DecimalField('Valor da Entrada', max_digits=10, decimal_places=2, null=False, blank=False)
-    valor_parcelado = models.DecimalField('Valor Parcelado', max_digits=10, decimal_places=2, null=False, blank=False)
+    valor_parcelado = models.DecimalField('Valor Parcelado', max_digits=10, decimal_places=2, null=True, blank=True)
     qnt_parcelas = models.IntegerField('Quantidade de Parcelas', null=False, blank=False)
     status = models.CharField('Status do Pedido', max_length=100, choices=VENDAS_STATUS_CHOICES, null=True, blank=True)
     
     def __str__(self):
         return self.num_pedido
+    
+    class Meta:
+        db_table = 'Vendas'
 
 parcelas_status_choices = (
     ('Em Atraso','Em Atraso'),
@@ -63,6 +71,10 @@ class Parcelas(models.Model):
     
     def __str__(self):
         return self.parcela
+    
+    class Meta:
+        db_table = 'Parcelas'
+        
     
 
 
