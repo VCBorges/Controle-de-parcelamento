@@ -2,10 +2,11 @@ from django.db import models
 
 # Create your models here.
 NIVEL_RISCO_CHOICES = (
-    ('Baixíssimo','Baixissimo'),
-    ('Médio','Medio'),
+    ('Baixo','Baixo'),
+    ('Baixíssimo','Baixíssimo'),
+    ('Médio','Médio'),
     ('Alto','Alto'),
-    ('Altíssimo','Altissimo'),
+    ('Altíssimo','Altíssimo'),
 )
 
 MODELO_NEGOCIO_CHOICES = (
@@ -16,7 +17,7 @@ MODELO_NEGOCIO_CHOICES = (
 class Cliente(models.Model):
     # id = models.AutoField(primary_key=True)
     documento = models.CharField('CPF/CNPJ', primary_key=True, max_length=14)
-    nome = models.CharField('Nome do Cliente', max_length=50, null=False)
+    nome = models.CharField('Nome do Cliente', max_length=100, null=False)
     nivel_risco = models.CharField('Nível de Risco', max_length=100, choices=NIVEL_RISCO_CHOICES, null=False, blank=False)
     modelo_negocio = models.CharField('Modelo de Negócio', choices=MODELO_NEGOCIO_CHOICES, max_length=100, null=True, blank=True)
     data_analise = models.DateField('Data da Análise', null=True, blank=True)
@@ -28,6 +29,7 @@ class Cliente(models.Model):
         db_table = 'Cliente'
     
 
+
 VENDAS_STATUS_CHOICES = (
     ('Entregue','Entregue'),
     ('Em processo de entrega','Em processo de entrega'),
@@ -35,9 +37,16 @@ VENDAS_STATUS_CHOICES = (
     ('Em processo triagem','Em processo triagem')
 )
 
+PEDIDOS_STATUS_CHOICES = (
+    ('Concluido','Concluido'),
+    ('Em atraso','Em atraso'),
+    ('Em andamento','Em andamento'),
+    ('Renegociado','Renegociado')
+)
+
 class Vendas(models.Model):
     id = models.AutoField(primary_key=True)
-    num_pedido = models.CharField('Número do Pedido',max_length=10, null=False, blank=False, unique=True, default=None)
+    num_pedido = models.CharField('Número do Pedido',max_length=30, null=False, blank=False, unique=True, default=None)
     documento = models.ForeignKey(Cliente,verbose_name='Nome Cliente', on_delete=models.CASCADE, null=False, blank=False)
     data_pedido = models.DateField('Data do Pedido', null=False, blank=False)
     valor_pedido = models.DecimalField('Valor do Pedido', max_digits=10, decimal_places=2, null=False, blank=False)
@@ -45,6 +54,7 @@ class Vendas(models.Model):
     valor_parcelado = models.DecimalField('Valor Parcelado', max_digits=10, decimal_places=2, null=True, blank=True)
     qnt_parcelas = models.IntegerField('Quantidade de Parcelas', null=False, blank=False)
     status = models.CharField('Status do Pedido', max_length=100, choices=VENDAS_STATUS_CHOICES, null=True, blank=True)
+    status_venda = models.CharField('Status da Venda', max_length=100, choices=PEDIDOS_STATUS_CHOICES, null=True, blank=True)
     
     def __str__(self):
         return self.num_pedido
@@ -52,32 +62,30 @@ class Vendas(models.Model):
     class Meta:
         db_table = 'Vendas'
 
-parcelas_status_choices = (
+
+
+
+PARCELAS_STATUS_CHOICES = (
     ('Em Atraso','Em Atraso'),
     ('Em Aberto','Em Aberto'),
     ('Pago','Pago'),
+    ('Pago em Atraso','Pago em Atraso'),
     ('Vencido','Vencido'),
     ('Cancelado','Cancelado')
 )
 
 class Parcelas(models.Model):
     id = models.AutoField(primary_key=True)
-    num_pedido = models.ForeignKey(Vendas, on_delete=models.CASCADE, null=False, blank=False)
+    venda = models.ForeignKey(Vendas, on_delete=models.CASCADE, null=True, blank=True)
+    num_pedido = models.CharField('Número do Pedido',max_length=30, null=True, blank=True)
     nome_cliente = models.CharField('Nome do Cliente', max_length=50, null=True, blank=True)
     parcela = models.IntegerField('Parcela', null=False, blank=False)
     data_vencimento = models.DateField('Data de Vencimento', null=True, blank=True)
-    status = models.CharField('Status', max_length=100, choices=parcelas_status_choices ,null=True, blank=True)
+    status = models.CharField('Status', max_length=100, choices=PARCELAS_STATUS_CHOICES ,null=True, blank=True)
     valor = models.DecimalField('Valor', max_digits=10, decimal_places=2, null=True, blank=True)
     
     def __str__(self):
-        return self.parcela
+        return str(self.parcela)
     
     class Meta:
         db_table = 'Parcelas'
-        
-    
-
-
-    
-
-

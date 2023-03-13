@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, ListView, UpdateView
+from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.contrib import messages
 
 from controle_parcelamento.forms import *
@@ -19,7 +19,10 @@ class HomeTemplateView(TemplateView):
         # context['cliente'] = Cliente.objects.all()
         return context
     
+    
+    
 class ClienteListView(ListView):
+    
     model = Cliente
     template_name = 'cliente_list.html'
     context_object_name = 'clientes'
@@ -28,6 +31,7 @@ class ClienteListView(ListView):
         context = super(ClienteListView, self).get_context_data(**kwargs)
         context['cliente'] = Cliente.objects.all()
         return context
+    
     
 
 class VendasListView(ListView):
@@ -41,6 +45,7 @@ class VendasListView(ListView):
         return context
     
 
+
 class ParcelasListView(ListView):
     model = Parcelas
     template_name = 'parcela_list.html'
@@ -52,12 +57,13 @@ class ParcelasListView(ListView):
         return context
     
     
+    
 class CreateClienteView(CreateView):
     model = Cliente
     form_class = CreateClienteForm
     success_url = reverse_lazy('home')
     
-    def form_valid(self, form):
+    def form_valid(self, form: CreateClienteForm):
         messages.success(self.request, 'Cliente cadastrado com sucesso!', extra_tags='cliente')
         return super().form_valid(form)
     
@@ -65,13 +71,14 @@ class CreateClienteView(CreateView):
         messages.error(self.request, 'Houve um erro ao cadastrar o cliente!', extra_tags='cliente')
         return redirect('home')
 
+
     
 class CreateVendasView(CreateView):
     model = Vendas
     form_class = CreateVendasForm
     success_url = reverse_lazy('home')
     
-    def form_valid(self, form):
+    def form_valid(self, form: CreateVendasForm):
         # print(form)
         messages.success(self.request, 'Venda cadastrado com sucesso!', extra_tags='venda')
         return super().form_valid(form)
@@ -88,13 +95,13 @@ class UpdateClienteView(UpdateView):
     model = Cliente
     form_class = UpdateClienteForm
     template_name = 'cliente_update.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('cliente_list')
     
-    def form_valid(self, form):
+    def form_valid(self, form: UpdateClienteForm):
         messages.success(self.request, 'Cliente atualizado com sucesso!', extra_tags='cliente')
         return super().form_valid(form)
     
-    def form_invalid(self, form: CreateClienteForm):
+    def form_invalid(self, form: UpdateClienteForm):
         messages.error(self.request, 'Houve um erro ao atualizar o cliente!', extra_tags='cliente')
         return redirect('home')
     
@@ -104,22 +111,23 @@ class UpdateVendasView(UpdateView):
     model = Vendas
     form_class = UpdateVendasForm
     template_name = 'vendas_update.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('vendas_list')
     
-    def form_valid(self, form):
+    def form_valid(self, form: UpdateVendasForm):
         messages.success(self.request, 'Venda atualizada com sucesso!', extra_tags='venda')
         return super().form_valid(form)
     
-    def form_invalid(self, form: CreateVendasForm):
+    def form_invalid(self, form: UpdateVendasForm):
         messages.error(self.request, 'Houve um erro ao atualizar a venda!', extra_tags='venda')
         return redirect('home')
     
+
 
 class UpdateParcelasView(UpdateView):
     model = Parcelas
     form_class = UpdateParcelasForm
     template_name = 'parcela_update.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('parcelas_list')
     
     def form_valid(self, form):
         messages.success(self.request, 'Parcela atualizada com sucesso!', extra_tags='parcela')
@@ -128,3 +136,30 @@ class UpdateParcelasView(UpdateView):
     def form_invalid(self, form: UpdateParcelasForm):
         messages.error(self.request, 'Houve um erro ao atualizar a parcela!', extra_tags='parcela')
         return redirect('home')
+
+
+
+class DeleteClienteView(DeleteView):
+    model = Cliente
+    template_name = 'cliente_delete.html'
+    success_url = reverse_lazy('home')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'Cliente excluído com sucesso!', extra_tags='cliente')
+        return super().delete(request, *args, **kwargs)
+
+
+
+class ClienteDetailView(DetailView):
+    model = Cliente
+    template_name = 'cliente_detail.html'
+    context_object_name = 'cliente'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cliente = self.object
+        vendas = Vendas.objects.filter(documento=cliente)
+        parcelas = Parcelas.objects.filter(venda__in=list(vendas))
+        context['vendas'] = vendas
+        context['parcelas'] = parcelas        
+        return context

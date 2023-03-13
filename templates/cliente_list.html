@@ -3,13 +3,37 @@
 
 {% block title %}{% endblock %}
 
+{% block style %}
+<style>
+    .list-detail {
+        text-decoration:none;
+        color: inherit;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     
     <div class="col-lg-7">
-        <h1>Clientes</h1>
+        <!-- {% block header %}Clientes{% endblock header %} -->
+        {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'cliente success' %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% elif message.tags == 'cliente error' %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
-        <table id="clientes_table" class="display">
+        <table id="clientes_table" class="display cell-border nowrap">
 
             <thead>
                 <tr>
@@ -18,6 +42,8 @@
                     <th>Nível de Risco</th>
                     <th>Data da Análise</th>
                     <th>Editar</th>
+                    <!-- <th>Excluir</th> -->
+
                 </tr>
             </thead>
 
@@ -25,17 +51,20 @@
 
                 {% for cliente in clientes %}
                     <tr>
-                        <td>{{ cliente.nome }}</td>
+                        <td><a class="list-detail" href="{% url 'detail_cliente' cliente.documento %}">{{ cliente.nome }}</a></td>
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nivel_risco }}</td>
                         <td>{{ cliente.data_analise|date:"d/m/Y" }}</td>
                         <td><a href="{% url 'update_cliente' cliente.documento %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
+                        <!-- <td><a href="{% url 'delete_cliente' cliente.pk %}"><button type="submit" class="btn btn-primary">Excluir</button></a></td> -->
                     </tr>
                 {% endfor %}
 
             </tbody>
         </table>
     </div>
+
+    
 </div>
 
 
@@ -43,12 +72,18 @@
     $(document).ready( function () {
     $('#clientes_table').DataTable({
         // ordering: true,
+        columnDefs: [
+                // {className: "td-text-center", targets: "_all"},
+                // {className: "editable-cost", targets: 9},
+                {width    : "1px", targets: [-1,-2,-3]},
+                { type: 'date-uk', targets: 3 }
+        ]
         
     });
     
 } );
 </script>
-{% endblock %}
+{% endblock content %}
 
 <td><a href="{% url 'update_cliente' cliente.id %}">Editar</a></td>
-<td><a href="{% url 'delete_cliente' cliente.id %}">Excluir</a></td>
+<td><a href="{% url 'delete_cliente' cliente.pk %}">Excluir</a></td>

@@ -8,20 +8,36 @@
 <div class="container-fluid">
     
     <div class="col-lg-12">
-        <!-- <h1 vendas</h1> -->
+        <!-- {% block header %}Vendas{% endblock header %} -->
+            {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'venda success' %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% elif message.tags == 'venda error' %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
-        <table id="vendas_table" class="display">
+        <table id="vendas_table" class="display cell-border nowrap">
 
             <thead>
                 <tr>
                     <th>Número Pedido</th>
-                    <th>CPF/CNPJ</th>
+                    <th>Nome Cliente</th>
                     <th>Data Pedido</th>
                     <th>Valor Pedido</th>
                     <th>Valor Entrada</th>
                     <th>Valor Parcelado</th>
                     <th>Qnt. Parcelas</th>
                     <th>Status</th>
+                    <th>Status Venda</th>
                     <th>Editar</th>
                 </tr>
             </thead>
@@ -38,6 +54,7 @@
                         <td>{{ venda.valor_parcelado }}</td>
                         <td>{{ venda.qnt_parcelas }}</td>
                         <td>{{ venda.status }}</td>
+                        <td>{{ venda.status_venda }}</td>
                         <td><a href="{% url 'update_venda' venda.id %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
                     </tr>
                 {% endfor %}
@@ -52,6 +69,12 @@
     $(document).ready( function () {
     $('#vendas_table').DataTable({
         // ordering: true,
+        columnDefs: [
+                // {className: "td-text-center", targets: "_all"},
+                // {className: "editable-cost", targets: 9},
+                {width    : "1px", targets: [-1]},
+                { type: 'date-uk', targets: 2 }
+        ]
         
     });
     

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load humanize %} 
+
+{% block title %}{% endblock %}
+
+{% block style %}
+<style>
+    .cliente-details {
+        background-color: white;
+        width:25%;
+        border: 3px solid black;
+        border-radius: 20px;
+    }
+
+    .cliente {
+        margin: 0 auto;
+        width: 80%;
+        padding: 10px;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: left;
+        white-space: nowrap;
+    }
+    
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="cliente-details">
+        <div class="cliente">
+
+            <p>
+                CPF/CNPJ: {{ cliente.documento }}
+            </p>
+        
+            <p>
+                Nome: {{ cliente.nome }}
+            </p>
+        
+            <p>
+                Nível de Risco: {{ cliente.nivel_risco }}
+            </p>
+        
+            <p>
+                Modelo de Negócio: {{ cliente.modelo_negocio }}
+            </p>
+        
+            <p>
+                Data da Análise: {{ cliente.data_analise|date:"d/m/Y" }}     
+            </p>
+            
+        </div>
+
+
+    </div>
+
+    <div>
+        {% for venda in vendas %}
+            {{ venda.num_pedido }}
+            {{ venda.nome_cli }}
+        {% endfor %}
+        
+        
+        {% for parcela in parcelas %}
+            {{ parcela }}
+        {% endfor %}
+
+
+        <table id="vendas_table" class="display cell-border nowrap">
+
+            <thead>
+                <tr>
+                    <th>Número Pedido</th>
+                    <th>Nome Cliente</th>
+                    <th>Data Pedido</th>
+                    <th>Valor Pedido</th>
+                    <th>Valor Entrada</th>
+                    <th>Valor Parcelado</th>
+                    <th>Qnt. Parcelas</th>
+                    <th>Status</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for venda in vendas %}
+                    <tr>
+                        <td>{{ venda.num_pedido }}</td>
+                        <td>{{ venda.documento }}</td>
+                        <td>{{ venda.data_pedido|date:"d/m/Y" }}</td>
+                        <td>{{ venda.valor_pedido|intcomma }}</td>
+                        <td>{{ venda.valor_entrada|intcomma }}</td>
+                        <td>{{ venda.valor_parcelado }}</td>
+                        <td>{{ venda.qnt_parcelas }}</td>
+                        <td>{{ venda.status }}</td>
+                        <td><a href="{% url 'update_venda' venda.id %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <table id="parcelas_table" class="display cell-border nowrap">
+        
+            <thead>
+                <tr>
+                    <th>Número Pedido</th>
+                    <th>Nome Cliente</th>
+                    <th>Num Pedido</th>
+                    <th>Parcela</th>
+                    <th>Data Vencimento</th>
+                    <th>Status</th>
+                    <th>Valor</th>
+                    <th>Editar</th>
+                    <!-- <th>Deletar</th> -->
+                </tr>
+            </thead>
+        
+            <tbody>
+        
+                {% for parcela in parcelas %}
+                    <tr>
+                        <td>{{ parcela.num_pedido }}</td>
+                        <td>{{ parcela.nome_cliente }}</td>
+                        <td>{{ parcela.num_pedido }}</td>
+                        <td>{{ parcela.parcela }}</td>
+                        <td>{{ parcela.data_vencimento|date:"d/m/Y" }}</td>
+                        <td>{{ parcela.status }}</td>
+                        <td>{{ parcela.valor|floatformat:2 }}</td>
+                        <td><a href="{% url 'update_parcela' parcela.id %}"><button type="submit" class="btn btn-primary">Editar</button></a></td>
+                    </tr>
+                {% endfor %}
+        
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+        
+    </div>
+</div>
+
+
+<script>
+    $(document).ready( function () {
+    $('#vendas_table').DataTable({
+        // ordering: true,
+        searching: false,
+        columnDefs: [
+                // {className: "td-text-center", targets: "_all"},
+                // {className: "editable-cost", targets: 9},
+                {width    : "1px", targets: [-1]},
+        ]
+    });
+})
+</script>
+
+<script>
+    $(document).ready(function() {
+        var dt = $('#parcelas_table').DataTable({
+            searchPanes: {
+                initCollapsed: true,
+                collapse: true,
+                viewTotal: true,
+                columns: [4]
+        },
+        dom: 'Pfrtip',
+        columnDefs: [
+                // {className: "td-text-center", targets: "_all"},
+                // {className: "editable-cost", targets: 9},
+                {width    : "1px", targets: [-1,-3]},
+        ]   
+
+    });
+
+    dt.searchPanes.rebuildPane();
+});
+</script>
+
+{% endblock %}

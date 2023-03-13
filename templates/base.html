@@ -9,21 +9,18 @@
     <title>{% block title %}{% endblock %}</title>
 
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
+    
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.13.2/af-2.5.2/b-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/kt-2.8.1/r-2.4.0/rg-1.3.0/rr-1.3.2/sc-2.1.0/sb-1.4.0/sp-2.1.1/sl-1.6.0/sr-1.2.1/datatables.min.css"/>
- 
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.13.2/af-2.5.2/b-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/kt-2.8.1/r-2.4.0/rg-1.3.0/rr-1.3.2/sc-2.1.0/sb-1.4.0/sp-2.1.1/sl-1.6.0/sr-1.2.1/datatables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.13.3/sorting/date-uk.js"></script>
 
 
-
-
-
-    {% block link %} {% endblock %}
+    {% block stylesheet %} {% endblock %}
 </head>
 <body>
     <style>
         /* body{
-            background: #dfe31f;
+            background: #797968;
         } */
 
         .btn-primary,
@@ -54,32 +51,27 @@
         
         </style>
 
-    {% block style %}
-    {% endblock %}
+    {% block style %}{% endblock style %}
 
-    <a href="{% url 'home' %}">
-        <img src="{% static 'images/4426d867-a7ac-46ee-9f0a-0f98babc6763.jpeg' %}" alt="Logo" width="100" height="100">
-    </a>
+    {% include 'navbar.html' %}
 
     <div class="container-fluid">
         <h3>Controle de Vendas Parceladas</h3>
-        <a href="{% url 'cliente_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Clientes</button>
-        </a>
-    
-        <a href="{% url 'vendas_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Vendas</button>
-        </a>
-    
-        <a href="{% url 'parcelas_list' %}">
-            <button type="submit" class="btn btn-primary">Lista de Parcelas</button>
-        </a>
+
+        <h4>
+            {% block header %} {% endblock header %}
+        </h4>
+        
     </div>
 
-    {% block content %}
-    {% endblock %}
 
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block content %}
+    {% endblock content %}
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js.map' %}"></script>
+
+    {% block script %} {% endblock %}
+
 </body>
 </html>

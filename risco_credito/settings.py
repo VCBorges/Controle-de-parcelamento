@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'samarinha.urls'
+ROOT_URLCONF = 'risco_credito.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'samarinha.wsgi.application'
+WSGI_APPLICATION = 'risco_credito.wsgi.application'
 
 
 # Database

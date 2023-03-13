@@ -6,72 +6,53 @@ from controle_parcelamento.models import *
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
+from crispy_forms.layout import Submit
 
 
 class CreateClienteForm(ModelForm):
     
-    data_analise = forms.DateField(label="Data da Análise",widget=forms.TextInput(attrs={'type': 'date','required': True}))
-    
     class Meta:
         model = Cliente
         fields = '__all__'
+        widgets = {
+            'data_analise': forms.TextInput(attrs={'type': 'date','required': False}),
+            
+        }
         
         
 class CreateVendasForm(ModelForm):
+     
+    data_pedido = forms.DateField(label="Data do Pedido",widget=forms.TextInput(attrs={'type': 'date','required': False}))
     
-    data_pedido = forms.DateField(label="Data do Pedido",widget=forms.TextInput(attrs={'type': 'date','required': True}))
+    documento = forms.ModelChoiceField(
+        queryset=Cliente.objects.order_by('nome'),
+        empty_label='-------------------',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Nome do Cliente'
+    )
     
-    
-    # def __init__(self, *args, **kwargs):
-    #     super(CreateVendasForm, self).__init__(*args, **kwargs)
-
-    #     self.helper = FormHelper()
-    #     self.helper.layout = Layout(
-    #         Field('data_pedido', attrs={'type': 'date'}),
-    #     )
-    
-    # def clean_valor_parcelado(self):
-    #     cleaned_data = super().clean()
-    #     valor_pedido = cleaned_data.get("valor_pedido")
-    #     valor_entrada = cleaned_data.get("valor_entrada")
-    #     valor_parcelado = valor_pedido - valor_entrada
-    #     return valor_parcelado
+    def clean_valor_pedido(self):
+        cleaned_data = super().clean()
+        valor_pedido = cleaned_data.get("valor_pedido")
+        if ',' in str(valor_pedido):
+            valor_pedido = valor_pedido.replace(',','.')
+        return valor_pedido
     
     def save(self, commit=True):
         instance = super().save(commit=False)
         
-        # instance['valor_parcelado'] = instance['valor_pedido'] - instance['valor_entrada']
         instance.valor_parcelado = instance.valor_pedido - instance.valor_entrada
         instance.save()
-        
         venda = Vendas.objects.get(num_pedido=instance.num_pedido)
         
-        # print(venda.documento)
-        
-        # cliente = Cliente.objects.get(documento=venda.documento)
-        
-        # lista_parcelas = []
-        
-        # for i in range(instance.qnt_parcelas):
-            
-        #     parcela = Parcelas(num_pedido=venda,
-        #                        parcela=i + 1,
-        #                        nome_cliente=venda.documento,
-        #                        valor=instance.valor_parcelado/instance.qnt_parcelas,
-        #                        status='Em Aberto')
-            
-        #     lista_parcelas.append(parcela)
-            
-        lista_parcelas = [Parcelas(num_pedido=venda,
+        lista_parcelas = [Parcelas(venda=venda,
+                                   num_pedido=venda.num_pedido,
                                    parcela=i + 1,
                                    nome_cliente=venda.documento,
-                                   valor=instance.valor_parcelado/instance.qnt_parcelas,
+                                   valor=instance.valor_parcelado / instance.qnt_parcelas,
                                    status='Em Aberto') for i in range(instance.qnt_parcelas)]
             
         Parcelas.objects.bulk_create(lista_parcelas)
-        
-        # if commit:
-        # instance.save()
         return instance
 
     class Meta:
@@ -92,10 +73,16 @@ class UpdateClienteForm(ModelForm):
     class Meta:
         model = Cliente
         fields = [
+            'documento',
+            'nome',
             'nivel_risco',
             'modelo_negocio',
             'data_analise',            
         ]
+        widgets = {
+            'documento': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'data_analise': forms.TextInput(attrs={'type': 'date','required': False}),
+        }
         
 
 class UpdateVendasForm(ModelForm):
@@ -103,12 +90,13 @@ class UpdateVendasForm(ModelForm):
     class Meta:
         model = Vendas
         fields = '__all__'
+        widgets = {
+            'data_pedido': forms.TextInput(attrs={'type': 'date','required': False}),
+        }
         
         
 class UpdateParcelasForm(ModelForm):
     
-    data_vencimento = forms.DateField(label="Data de Vencimento",widget=forms.TextInput(attrs={'type': 'date'}))
-        
     class Meta:
         model = Parcelas
         fields = [
@@ -116,3 +104,6 @@ class UpdateParcelasForm(ModelForm):
             'valor',
             'status'
         ]
+        widgets = {
+            'data_vencimento': forms.TextInput(attrs={'type': 'date','required': False}),
+        }
