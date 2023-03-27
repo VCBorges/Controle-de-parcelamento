@@ -1,37 +1,37 @@
 {% extends 'base.html' %}
 {% load humanize %} 
+{% load static %}
 
 {% block title %}{% endblock %}
 
+{% block stylesheet %}
+    <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}">
+    <link rel="stylesheet/less" type="text/css" href="{% static 'less/cliente-list.less' %}">
+{% endblock stylesheet %}
+
 {% block style %}
-<style>
-    .list-detail {
-        text-decoration:none;
-        color: inherit;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'cliente success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% elif message.tags == 'cliente error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 <div class="container-fluid">
     
-    <div class="col-lg-7">
-        <!-- {% block header %}Clientes{% endblock header %} -->
-        {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'cliente success' %}
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% elif message.tags == 'cliente error' %}
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+    <div class="col-lg-8">
+        
 
         <table id="clientes_table" class="display cell-border nowrap">
 
@@ -63,15 +63,14 @@
             </tbody>
         </table>
     </div>
-
-    
 </div>
-
 
 <script>
     $(document).ready( function () {
     $('#clientes_table').DataTable({
         // ordering: true,
+        "bInfo" : false, // hide showing n entries
+        "lengthChange": false, // hide entries per page
         columnDefs: [
                 // {className: "td-text-center", targets: "_all"},
                 // {className: "editable-cost", targets: 9},

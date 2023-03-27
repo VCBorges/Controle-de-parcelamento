@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView, DetailView, View
 from django.contrib import messages
 
 from controle_parcelamento.forms import *
 from controle_parcelamento.models import *
-
+from core.views import *
 
 
 class HomeTemplateView(TemplateView):
@@ -27,11 +27,6 @@ class ClienteListView(ListView):
     template_name = 'cliente_list.html'
     context_object_name = 'clientes'
     
-    def get_context_data(self, **kwargs):
-        context = super(ClienteListView, self).get_context_data(**kwargs)
-        context['cliente'] = Cliente.objects.all()
-        return context
-    
     
 
 class VendasListView(ListView):
@@ -39,10 +34,10 @@ class VendasListView(ListView):
     template_name = 'vendas_list.html'
     context_object_name = 'vendas'
     
-    def get_context_data(self, **kwargs):
-        context = super(VendasListView, self).get_context_data(**kwargs)
-        context['vendas'] = Vendas.objects.all()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(VendasListView, self).get_context_data(**kwargs)
+    #     context['vendas'] = Vendas.objects.all()
+    #     return context
     
 
 
@@ -51,43 +46,67 @@ class ParcelasListView(ListView):
     template_name = 'parcela_list.html'
     context_object_name = 'parcelas'
     
-    def get_context_data(self, **kwargs):
-        context = super(ParcelasListView, self).get_context_data(**kwargs)
-        context['parcelas'] = Parcelas.objects.all()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(ParcelasListView, self).get_context_data(**kwargs)
+    #     context['parcelas'] = Parcelas.objects.all()
+    #     return context
     
     
     
-class CreateClienteView(CreateView):
-    model = Cliente
+# class CreateClienteView(CreateView):
+#     model = Cliente
+#     form_class = CreateClienteForm
+#     success_url = reverse_lazy('home')
+    
+#     def form_valid(self, form: CreateClienteForm):
+#         messages.success(self.request, 'Cliente cadastrado com sucesso!', extra_tags='cliente')
+#         return super().form_valid(form)
+    
+#     def form_invalid(self, form: CreateClienteForm):
+#         messages.error(self.request, 'Houve um erro ao cadastrar o cliente!', extra_tags='cliente')
+#         return redirect('home')
+
+
+
+class CreateClienteView(FormSubmissionMixin,View):
+    
     form_class = CreateClienteForm
-    success_url = reverse_lazy('home')
+    success_message = 'Cliente cadastrado com sucesso!'
+    error_message = 'Houve um erro ao cadastrar o cliente!'
     
-    def form_valid(self, form: CreateClienteForm):
-        messages.success(self.request, 'Cliente cadastrado com sucesso!', extra_tags='cliente')
-        return super().form_valid(form)
-    
-    def form_invalid(self, form: CreateClienteForm):
-        messages.error(self.request, 'Houve um erro ao cadastrar o cliente!', extra_tags='cliente')
-        return redirect('home')
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
 
 
     
-class CreateVendasView(CreateView):
-    model = Vendas
+# class CreateVendasView(CreateView):
+#     model = Vendas
+#     form_class = CreateVendasForm
+#     success_url = reverse_lazy('home')
+    
+#     def form_valid(self, form: CreateVendasForm):
+#         # print(form)
+#         messages.success(self.request, 'Venda cadastrado com sucesso!', extra_tags='venda')
+#         return super().form_valid(form)
+    
+#     def form_invalid(self, form: CreateVendasForm):
+#         # print(form)
+#         print('EXECUTANDO FORM INVALID')
+#         messages.error(self.request, 'Houve um erro ao cadastrar a venda!', extra_tags='venda')
+#         return redirect('home')
+
+
+
+class CreateVendasView(FormSubmissionMixin,View):
+    
     form_class = CreateVendasForm
-    success_url = reverse_lazy('home')
+    success_message = 'Venda cadastrado com sucesso!'
+    error_message = 'Houve um erro ao cadastrar a venda!'
     
-    def form_valid(self, form: CreateVendasForm):
-        # print(form)
-        messages.success(self.request, 'Venda cadastrado com sucesso!', extra_tags='venda')
-        return super().form_valid(form)
-    
-    def form_invalid(self, form: CreateVendasForm):
-        # print(form)
-        print('EXECUTANDO FORM INVALID')
-        messages.error(self.request, 'Houve um erro ao cadastrar a venda!', extra_tags='venda')
-        return redirect('home')
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 
@@ -154,6 +173,16 @@ class ClienteDetailView(DetailView):
     model = Cliente
     template_name = 'cliente_detail.html'
     context_object_name = 'cliente'
+    
+    # def get_object(self, queryset=None):
+    #     pk = self.kwargs.get('pk')
+        
+    #     try:
+    #         Cliente.objects.get(pk=pk)
+    #     except Cliente.DoesNotExist:
+    #         pk = f'0{pk}'
+        
+    #     return super().get_object(queryset=queryset) if pk is None else self.model.objects.get(pk=pk)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

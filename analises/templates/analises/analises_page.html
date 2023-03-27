@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% crispy example_form example_form.helper %}
+
+
+{% block title %}Analises{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'bootstrap/checkout/form-validation.css' %}">
+<link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}">
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        
+        <div class="row">
+
+            <div class="col-lg-5" id="cliente_form_div_id">
+                <h3>Analises</h3>
+
+                <form action="{% url 'create_analise' %}" data-csrf="{{ csrf_token }}" method="POST" id="create_analise_form_id" class="needs-validation" novalidate>
+
+                    {% include 'forms_alerts.html' %}
+
+                    {{ form|crispy }}
+
+                    <button type="submit" class="btn btn-primary">
+                        Adicionar Cliente
+                    </button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'bootstrap/checkout/form-validation.js' %}"></script>
+<script src="{% static 'js/mixins.js' %}" ></script>
+
+<script>
+const form_analise = document.getElementById("create_analise_form_id");
+Object.assign(form_analise, FormSubmitMixin.methods);
+form_analise.addEventListener("submit", form_analise.submitForm);
+</script>
+
+{% endblock script %}

@@ -8,7 +8,7 @@ from controle_parcelamento.views import *
 urlpatterns = [
     path('', HomeTemplateView.as_view(), name='home'),
     
-    path('cliente-detail/<int:pk>/', ClienteDetailView.as_view(), name='detail_cliente'),
+    path('cliente-detail/<str:pk>/', ClienteDetailView.as_view(), name='detail_cliente'),
 
     path('cliente-list/', ClienteListView.as_view(), name='cliente_list'),
     path('vendas-list/', VendasListView.as_view(), name='vendas_list'),

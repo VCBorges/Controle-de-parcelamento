@@ -1,0 +1,33 @@
+.forms-buttons-mixin{
+    background-color: hsl(39, 9%, 69%);
+    border-color: hsl(39, 9%, 30%);
+}
+
+.forms-buttons-hover-mixin {
+    background-color: hsl(39, 9%, 30%);
+    border-color: hsl(39, 9%, 69%);
+}
+
+.forms-buttons-active-focus-mixin {
+    background-color: hsl(39, 9%, 20%);
+    border-color: hsl(39, 9%, 69%);
+}
+
+.btn-primary,
+// .btn-primary:hover,
+.btn-primary:active:hover {
+    .forms-buttons-mixin();
+}
+
+.btn-primary:hover{
+    .forms-buttons-hover-mixin();
+}
+
+.btn-primary:active:focus{
+    .forms-buttons-active-focus-mixin();
+}
+
+.asteriskField {
+        color: red;
+}
+

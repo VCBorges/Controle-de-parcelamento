@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load humanize %} 
+{% load static %}
+
+{% block title %}{% endblock %}
+
+{% block stylesheet %}
+    <!-- <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}"> -->
+{% endblock stylesheet %}
+
+{% block content %}
+<div class="container-fluid">
+   
+    <div class="col-lg-12">
+
+        <table id="analises_table" class="display cell-border nowrap">
+
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Nive de Risco</th>
+                    <th>Modelo de Negocio</th>
+                    <th>Tipo de Proposta</th>
+                    <th>Valor Proposta</th>
+                    <th>Valor Concedido</th>
+                    <th>Data Inicio</th>
+                    <th>Data Entrega</th>
+                    <!-- <th></th> -->
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for analise in analises %}
+                    <tr>
+                        <td>{{ analise.cliente }}</td>
+                        <td>{{ analise.documento }}</td>
+                        <td>{{ analise.nivel_risco }}</td>
+                        <td>{{ analise.modelo_negocio }}</td>
+                        <td>{{ analise.tipo_proposta }}</td>
+                        <td>{{ analise.valor_proposta }}</td>
+                        <td>{{ analise.valor_concedido }}</td>
+                        <td>{{ analise.data_inicio|date:"d/m/Y" }}</td>
+                        <td>{{ analise.data_entrega|date:"d/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    var dt = $('#analises_table').DataTable({
+        dom: 'Pfrtip',
+        "bInfo" : false, // hide showing n entries
+        "lengthChange": false, // hide entries per page
+        // "scrollX": true, // enable horizontal scrolling
+        // scrollY:400,
+        // searchPanes: {
+        //     initCollapsed: true,
+        //     collapse: true,
+        //     viewTotal: true,
+        //     columns: [4,5]
+        // },
+        columnDefs: [
+                // {className: "td-text-center", targets: "_all"},
+                // {className: "editable-cost", targets: 9},
+                {width: "1px", targets: [-1,-2]},
+                {type: 'date-uk', targets:[-1,-2]},
+                {
+                    targets: [-3, -4], // Target the third column (index 2)
+                    render: function(data, type, row, meta) {
+                        return $.fn.dataTable.render.number(".", ",", 2).display(data); // Add a $ sign and format the value to 2 decimal places
+                    }
+                }
+                // {
+                //     targets: [4], // replace 1 with the index of the column containing dates
+                //     render: function (data, type, row) {
+                //     return moment(data, "DD/MM/YYYY").format("YYYY/MM/DD"); // specify the input and output date formats
+                //     }
+                // }
+        ]
+        
+    });
+
+    // dt.searchPanes.rebuildPane();
+});
+</script>
+{% endblock %}

@@ -16,7 +16,6 @@ class CreateClienteForm(ModelForm):
         fields = '__all__'
         widgets = {
             'data_analise': forms.TextInput(attrs={'type': 'date','required': False}),
-            
         }
         
         
@@ -26,7 +25,7 @@ class CreateVendasForm(ModelForm):
     
     documento = forms.ModelChoiceField(
         queryset=Cliente.objects.order_by('nome'),
-        empty_label='-------------------',
+        empty_label='-------------------------------',
         widget=forms.Select(attrs={'class': 'form-control'}),
         label='Nome do Cliente'
     )
@@ -57,15 +56,16 @@ class CreateVendasForm(ModelForm):
 
     class Meta:
         model = Vendas
-        fields = ['num_pedido', 
-                  'documento', 
-                  'data_pedido',
-                  'valor_pedido', 
-                  'valor_entrada', 
-                #   'valor_parcelado', 
-                  'qnt_parcelas',
-                  'status'
-                ]
+        fields = [
+            'num_pedido', 
+            'documento', 
+            'data_pedido',
+            'valor_pedido', 
+            'valor_entrada', 
+        #   'valor_parcelado', 
+            'qnt_parcelas',
+            'status'
+        ]
 
 
 class UpdateClienteForm(ModelForm):

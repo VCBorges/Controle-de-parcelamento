@@ -8,29 +8,22 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'bootstrap/checkout/form-validation.css' %}">
+<link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}">
 {% endblock %}
 
 {% block style %}
-<style>
-    .asteriskField {
-        color: red;
-    }
-
-</style>
 {% endblock %}
 
 {% block content %}
-
-
 
     <div class="container-fluid">
         
         <div class="row">
 
-            <div class="col-lg-5" id="cliente_form_div">
+            <div class="col-lg-5" id="cliente_form_div_id">
                 <h3>Clientes</h3>
 
-                {% if messages %}
+                <!-- {% if messages %}
                     {% for message in messages %}
                         {% if message.tags == 'cliente success' %}
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -60,49 +53,36 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-                {% endif %}
+                {% endif %} -->
+                
+                <form action="{% url 'create_cliente' %}" data-csrf="{{ csrf_token }}" method="POST" id="create_cliente_form_id" class="needs-validation" novalidate>
 
-                <form action="{% url 'create_cliente' %}" method="POST" class="needs-validation" novalidate>
-                    {% csrf_token %}
+                    {% include 'forms_alerts.html' %}
+
                     {{ form|crispy }}
-                    <!-- <input type="submit" class="btn-primary" value="Enviar"> -->
-                    <button type="submit" class="btn btn-primary">Adicionar Cliente</button>
-                    <br>
+
+                    <button type="submit" class="btn btn-primary">
+                        Adicionar Cliente
+                    </button>
                 </form>
-                <!-- {% crispy form %}     -->
+                
             </div>
 
-        <!-- </div> -->
-    
-        <!-- <h1>---------------------------------------------------------------------------------------------</h1> -->
-    
-        <!-- <div class="container-fluid"> -->
             <div class="col-lg-5" id="vendas_form_div">
                 <h3>Vendas</h3>
 
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'venda success' %}
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% elif message.tags == 'venda error' %}
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                
+                <form action="{% url 'create_vendas' %}" data-csrf="{{ csrf_token }}" method="POST" id="create_venda_form_id" class="needs-validation" novalidate>
 
-                <form action="{% url 'create_vendas' %}" method="POST">
-                    {% csrf_token %}
+                    {% include 'forms_alerts.html' %}
+
                     {{ form2|crispy }}
-                    <!-- <input type="submit" class="btn-primary" value="Enviar"> -->
-                    <button type="submit" class="btn btn-primary">Adicionar Venda</button>
 
+                    <button type="submit" class="btn btn-primary">
+                        Adicionar Venda
+                    </button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -111,4 +91,26 @@
 
 {% block script %}
 <script src="{% static 'bootstrap/checkout/form-validation.js' %}"></script>
+<script src="{% static 'js/mixins.js' %}" ></script>
+
+<script>
+const form_cliente = document.getElementById("create_cliente_form_id");
+Object.assign(form_cliente, FormSubmitMixin.methods);
+form_cliente.addEventListener("submit", form_cliente.submitForm);
+
+const form_venda = document.getElementById("create_venda_form_id");
+Object.assign(form_venda, FormSubmitMixin.methods);
+form_venda.addEventListener("submit", form_venda.submitForm);
+</script>
+<!-- <script>
+    const closeButtons = document.querySelectorAll('.btn-close');
+  
+    closeButtons.forEach(function(closeButton) {
+      closeButton.addEventListener('click', function() {
+        const alert = this.parentNode;
+        alert.classList.toggle('d-none');
+      });
+    });
+</script> -->
+
 {% endblock script %}

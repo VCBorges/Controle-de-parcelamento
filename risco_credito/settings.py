@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     
     'controle_parcelamento',
+    'analises',
 ]
 
 MIDDLEWARE = [

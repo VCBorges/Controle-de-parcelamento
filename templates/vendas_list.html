@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
-
-{% load humanize %} 
+{% load humanize %}
+{% load static %}
 
 {% block title %}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}">
+{% endblock stylesheet %}
+
 
 {% block content %}
 <div class="container-fluid">
@@ -49,8 +54,8 @@
                         <td>{{ venda.num_pedido }}</td>
                         <td>{{ venda.documento }}</td>
                         <td>{{ venda.data_pedido|date:"d/m/Y" }}</td>
-                        <td>{{ venda.valor_pedido|intcomma }}</td>
-                        <td>{{ venda.valor_entrada|intcomma }}</td>
+                        <td>{{ venda.valor_pedido }}</td>
+                        <td>{{ venda.valor_entrada }}</td>
                         <td>{{ venda.valor_parcelado }}</td>
                         <td>{{ venda.qnt_parcelas }}</td>
                         <td>{{ venda.status }}</td>
@@ -69,15 +74,23 @@
     $(document).ready( function () {
     $('#vendas_table').DataTable({
         // ordering: true,
+        "bInfo" : false, // hide showing n entries
+        "lengthChange": false, // hide entries per page
+        "scrollX": true, // enable horizontal scrolling
+        scrollY:400, // enable vertical scrolling
         columnDefs: [
                 // {className: "td-text-center", targets: "_all"},
                 // {className: "editable-cost", targets: 9},
-                {width    : "1px", targets: [-1]},
-                { type: 'date-uk', targets: 2 }
+            {width: "1px", targets: [-1]},
+            {type: 'date-uk', targets: 2 },
+            {
+                targets: [3,4,5], // Target the third column (index 2)
+                render: function(data, type, row, meta) {
+                    return $.fn.dataTable.render.number(".", ",", 2).display(data); // Add a $ sign and format the value to 2 decimal places
+                }
+            }
         ]
-        
     });
-    
 } );
 </script>
 {% endblock %}
