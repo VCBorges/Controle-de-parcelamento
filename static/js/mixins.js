@@ -1,4 +1,4 @@
-const ResponseMixin = {
+const FormResponseMixin = {
     methods: {
         handleSuccess(form, alertSuccess, alertError,data) {
             form.reset();
@@ -20,7 +20,7 @@ const ResponseMixin = {
 };
 
 const FormSubmitMixin = {
-    mixins: [ResponseMixin],
+    mixins: [FormResponseMixin],
     methods: {
         async submitForm(event) {
             event.preventDefault();
@@ -41,23 +41,9 @@ const FormSubmitMixin = {
             if (response.ok) {
                 const data = await response.json();
                 if (data.status == 201){
-                    ResponseMixin.methods.handleSuccess(form, alertSuccess, alertDanger, data);
-                    // console.log(data.status);
-                    // form.reset();
-                    // form.classList.remove("was-validated");
-                    // alertDanger.classList.add("d-none");
-                    // const alertMessage = alertSuccess.querySelector('.alert-message');
-                    // alertMessage.innerHTML = data.message;
-                    // alertSuccess.classList.remove("d-none");
-                    // alert(data.message);
+                    FormResponseMixin.methods.handleSuccess(form, alertSuccess, alertDanger, data);
                 }else{
-                    ResponseMixin.methods.handleError(alertSuccess, alertDanger, data);
-                    // alert(data.message);
-                    // alertSuccess.classList.add("d-none");
-                    // const alertMessage = alertDanger.querySelector('#alert_message_id');
-                    // alertMessage.innerHTML = data.message;
-                    // alertDanger.innerHTML = data.message;
-                    // alertDanger.classList.remove("d-none");
+                    FormResponseMixin.methods.handleError(alertSuccess, alertDanger, data);
                 }
             } else {
                 alert(data.message);
@@ -69,9 +55,33 @@ const FormSubmitMixin = {
     },
 };
 
+const ModalFormSubmitMixin = {
+    mixins: [FormSubmitMixin],
+    methods: {
+        handleSuccess(form, alertSuccess, alertDanger, data) {
+            // Your custom code here
+            alert("Form submitted successfully!");
+        }
+    }
+};
+
+const modal_forms = document.querySelectorAll(".modal-form");
+
+modal_forms.forEach(modal_form => {
+    Object.assign(modal_form, ModalFormSubmitMixin.methods);
+    modal_form.addEventListener("submit", modal_form.submitForm);
+});
+
+const forms = document.querySelectorAll("form");
+forms.forEach(form => {
+  Object.assign(form, FormSubmitMixin.methods);
+  form.addEventListener("submit", form.submitForm);
+});
+
 // const form_cliente = document.getElementById("create_cliente_form_id");
-// Object.assign(form_cliente, FormSubmitMixin.methods);
-// form_cliente.addEventListener("submit", form_cliente.submitForm);
+// const form = document.querySelector("form");
+// Object.assign(form, FormSubmitMixin.methods);
+// form.addEventListener("submit", form.submitForm);
 
 // const form_venda = document.getElementById("create_venda_form_id");
 // Object.assign(form_venda, FormSubmitMixin.methods);

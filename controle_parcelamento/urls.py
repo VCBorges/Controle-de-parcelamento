@@ -17,9 +17,9 @@ urlpatterns = [
     path('create-cliente/', CreateClienteView.as_view(), name='create_cliente'),
     path('create-vendas/', CreateVendasView.as_view(), name='create_vendas'),
     
-    path('cliente-update/<int:pk>/', UpdateClienteView.as_view(), name='update_cliente'),
-    path('vendas-update/<int:pk>/', UpdateVendasView.as_view(), name='update_venda'),
-    path('parcela-update/<int:pk>/', UpdateParcelasView.as_view(), name='update_parcela'),
+    path('cliente-update/<str:pk>/', UpdateClienteView.as_view(), name='update_cliente'),
+    path('vendas-update/<str:pk>/', UpdateVendasView.as_view(), name='update_venda'),
+    path('parcela-update/<str:pk>/', UpdateParcelasView.as_view(), name='update_parcela'),
     
-    path('cliente-delete/<int:pk>/', DeleteClienteView.as_view(), name='delete_cliente'),
+    path('cliente-delete/<str:pk>/', DeleteClienteView.as_view(), name='delete_cliente'),
 ]

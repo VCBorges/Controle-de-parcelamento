@@ -44,10 +44,4 @@
 <script src="{% static 'bootstrap/checkout/form-validation.js' %}"></script>
 <script src="{% static 'js/mixins.js' %}" ></script>
 
-<script>
-const form_analise = document.getElementById("create_analise_form_id");
-Object.assign(form_analise, FormSubmitMixin.methods);
-form_analise.addEventListener("submit", form_analise.submitForm);
-</script>
-
 {% endblock script %}

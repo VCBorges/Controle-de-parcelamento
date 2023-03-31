@@ -5,33 +5,33 @@
 {% block title %}{% endblock %}
 
 {% block stylesheet %}
-    <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}">
-    <link rel="stylesheet/less" type="text/css" href="{% static 'less/cliente-list.less' %}">
+    <!-- <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}"> -->
+    <!-- <link rel="stylesheet/less" type="text/css" href="{% static 'less/cliente-list.less' %}"> -->
 {% endblock stylesheet %}
 
 {% block style %}
 {% endblock %}
 
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        {% if message.tags == 'cliente success' %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% elif message.tags == 'cliente error' %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
 <div class="container-fluid">
     
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'cliente success' %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% elif message.tags == 'cliente error' %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <div class="col-lg-8">
-        
 
         <table id="clientes_table" class="display cell-border nowrap">
 
@@ -42,8 +42,6 @@
                     <th>Nível de Risco</th>
                     <th>Data da Análise</th>
                     <th>Editar</th>
-                    <!-- <th>Excluir</th> -->
-
                 </tr>
             </thead>
 
@@ -77,10 +75,8 @@
                 {width    : "1px", targets: [-1,-2,-3]},
                 { type: 'date-uk', targets: 3 }
         ]
-        
     });
-    
-} );
+});
 </script>
 {% endblock content %}
 

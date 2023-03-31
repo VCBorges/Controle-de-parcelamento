@@ -5,13 +5,21 @@
 {% block title %}{% endblock %}
 
 {% block stylesheet %}
-    <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}">
+    <!-- <link rel="stylesheet/less" type="text/css" href="{% static 'less/forms.less' %}"> -->
 {% endblock stylesheet %}
+
+{% block style %}
+<style>
+    .table-wrapper{
+        float: left;
+    }
+</style>
+{% endblock style %}
 
 {% block content %}
 <div class="container-fluid">
    
-    <div class="col-lg-10">
+    <div class="col-lg-10 table-wrapper">
         <!-- {% block header %}Parcelas{% endblock header %} -->
             {% if messages %}
                 {% for message in messages %}
@@ -35,7 +43,6 @@
                 <tr>
                     <th>Número Pedido</th>
                     <th>Nome Cliente</th>
-                    <th>Num Pedido</th>
                     <th>Parcela</th>
                     <th>Data Vencimento</th>
                     <th>Status</th>
@@ -51,7 +58,6 @@
                     <tr>
                         <td>{{ parcela.num_pedido }}</td>
                         <td>{{ parcela.nome_cliente }}</td>
-                        <td>{{ parcela.num_pedido }}</td>
                         <td>{{ parcela.parcela }}</td>
                         <td>{{ parcela.data_vencimento|date:"d/m/Y" }}</td>
                         <td>{{ parcela.status }}</td>
@@ -83,7 +89,7 @@ $(document).ready(function() {
         columnDefs: [
                 // {className: "td-text-center", targets: "_all"},
                 // {className: "editable-cost", targets: 9},
-                {width: "1px", targets: [-1,-3,1]},
+                {width: "1px", targets: [0, -1, -2, -3, -4, -5]},
                 {type: 'date-uk', targets: 4 },
                 {
                     targets: [-2], // Target the third column (index 2)

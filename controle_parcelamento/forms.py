@@ -1,8 +1,9 @@
 from django.forms import ModelForm
-from controle_parcelamento.models import Cliente, Vendas, Parcelas
 from django import forms
 
 from controle_parcelamento.models import *
+from controle_parcelamento.models import Cliente, Vendas, Parcelas
+from core.utils import check_parcelas_status
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
@@ -18,6 +19,8 @@ class CreateClienteForm(ModelForm):
             'data_analise': forms.TextInput(attrs={'type': 'date','required': False}),
         }
         
+     
+     
         
 class CreateVendasForm(ModelForm):
      
@@ -68,6 +71,7 @@ class CreateVendasForm(ModelForm):
         ]
 
 
+
 class UpdateClienteForm(ModelForm):
     
     class Meta:
@@ -85,6 +89,7 @@ class UpdateClienteForm(ModelForm):
         }
         
 
+
 class UpdateVendasForm(ModelForm):
     
     class Meta:
@@ -93,6 +98,7 @@ class UpdateVendasForm(ModelForm):
         widgets = {
             'data_pedido': forms.TextInput(attrs={'type': 'date','required': False}),
         }
+        
         
         
 class UpdateParcelasForm(ModelForm):
@@ -107,3 +113,10 @@ class UpdateParcelasForm(ModelForm):
         widgets = {
             'data_vencimento': forms.TextInput(attrs={'type': 'date','required': False}),
         }
+        
+    def save(self, commit=True):
+        instance = super().save()
+        check_parcelas_status(instance)
+        return instance
+        
+        

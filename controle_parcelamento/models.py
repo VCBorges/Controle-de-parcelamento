@@ -1,20 +1,21 @@
 from django.db import models
 
 # Create your models here.
-NIVEL_RISCO_CHOICES = (
-    ('Baixo','Baixo'),
-    ('Baixíssimo','Baixíssimo'),
-    ('Médio','Médio'),
-    ('Alto','Alto'),
-    ('Altíssimo','Altíssimo'),
-)
-
-MODELO_NEGOCIO_CHOICES = (
-    ('Sol Copérnico','Sol Copérnico'),
-    ('Sol+','Sol+'),
-)
 
 class Cliente(models.Model):
+    
+    NIVEL_RISCO_CHOICES = (
+        ('Baixo','Baixo'),
+        ('Baixíssimo','Baixíssimo'),
+        ('Médio','Médio'),
+        ('Alto','Alto'),
+        ('Altíssimo','Altíssimo'),
+    )
+
+    MODELO_NEGOCIO_CHOICES = (
+        ('Sol Copérnico','Sol Copérnico'),
+        ('Sol+','Sol+'),
+    )
     # id = models.AutoField(primary_key=True)
     documento = models.CharField('CPF/CNPJ', primary_key=True, max_length=14)
     nome = models.CharField('Nome do Cliente', max_length=100, null=False)
@@ -30,21 +31,23 @@ class Cliente(models.Model):
     
 
 
-VENDAS_STATUS_CHOICES = (
-    ('Entregue','Entregue'),
-    ('Em processo de entrega','Em processo de entrega'),
-    ('Aguardando expedição','Aguardando expedição'),
-    ('Em processo triagem','Em processo triagem')
-)
-
-PEDIDOS_STATUS_CHOICES = (
-    ('Concluido','Concluido'),
-    ('Em atraso','Em atraso'),
-    ('Em andamento','Em andamento'),
-    ('Renegociado','Renegociado')
-)
 
 class Vendas(models.Model):
+
+    VENDAS_STATUS_CHOICES = (
+        ('Entregue','Entregue'),
+        ('Em processo de entrega','Em processo de entrega'),
+        ('Aguardando expedição','Aguardando expedição'),
+        ('Em processo triagem','Em processo triagem')
+    )
+
+    PEDIDOS_STATUS_CHOICES = (
+        ('Concluido','Concluido'),
+        ('Em atraso','Em atraso'),
+        ('Em andamento','Em andamento'),
+        ('Renegociado','Renegociado')
+    )
+
     id = models.AutoField(primary_key=True)
     num_pedido = models.CharField('Número do Pedido',max_length=30, null=False, blank=False, unique=True, default=None)
     documento = models.ForeignKey(Cliente,verbose_name='Nome Cliente', on_delete=models.CASCADE, null=False, blank=False)
@@ -65,16 +68,18 @@ class Vendas(models.Model):
 
 
 
-PARCELAS_STATUS_CHOICES = (
-    ('Em Atraso','Em Atraso'),
-    ('Em Aberto','Em Aberto'),
-    ('Pago','Pago'),
-    ('Pago em Atraso','Pago em Atraso'),
-    ('Vencido','Vencido'),
-    ('Cancelado','Cancelado')
-)
 
 class Parcelas(models.Model):
+
+    PARCELAS_STATUS_CHOICES = (
+        ('Em Atraso','Em Atraso'),
+        ('Em Aberto','Em Aberto'),
+        ('Pago','Pago'),
+        ('Pago em Atraso','Pago em Atraso'),
+        ('Vencido','Vencido'),
+        ('Cancelado','Cancelado')
+    )
+    
     id = models.AutoField(primary_key=True)
     venda = models.ForeignKey(Vendas, on_delete=models.CASCADE, null=True, blank=True)
     num_pedido = models.CharField('Número do Pedido',max_length=30, null=True, blank=True)
